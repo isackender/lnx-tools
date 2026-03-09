@@ -1,7 +1,7 @@
-# >>> Neo bootstrap aliases >>>
+# >>> LNX Tools aliases >>>
 alias edalias='nano ~/.bash_aliases && sourcealias'
-alias sourcealias="source ~/.bash_aliases && printf '\n--\nAliases updated, Neo.\n'"
-alias updateos="apt update && apt upgrade -y && printf '\n--\nSystem updated, Neo.\n'"
+alias sourcealias="source ~/.bash_aliases && printf '\n--\nAliases updated.\n'"
+alias updateos="apt update && apt upgrade -y && printf '\n--\nSystem updated.\n'"
 alias bngx='backup-nginx'
 alias rngx='restore-nginx'
-# <<< Neo bootstrap aliases <<<
+# <<< LNX Tools aliases <<<
