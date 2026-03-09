@@ -1,0 +1,5 @@
+# >>> Neo bootstrap aliases >>>
+alias edalias='nano ~/.bash_aliases && sourcealias'
+alias sourcealias="source ~/.bash_aliases && printf '\n--\nAliases updated, Neo.\n'"
+alias updateos="apt update && apt upgrade -y && printf '\n--\nSystem updated, Neo.\n'"
+# <<< Neo bootstrap aliases <<<
