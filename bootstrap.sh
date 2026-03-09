@@ -18,4 +18,4 @@ if [ -f "$HOME/.bash_aliases" ]; then
   source "$HOME/.bash_aliases"
 fi
 
-printf "\n--\nBootstrap completed successfully, Neo.\n"
+printf "\n--\nBootstrap completed successfully.\n"
