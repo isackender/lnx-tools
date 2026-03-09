@@ -6,5 +6,5 @@ alias updateos="apt update && apt upgrade -y && printf '\n--\nSystem updated, Ne
 alias restore-nginx='restore-nginx'
 alias rngx='restore-nginx'
 alias backup-nginx='backup-nginx'
-alias bngx='backup-nginx
+alias bngx='backup-nginx'
 # <<< Neo bootstrap aliases <<<
