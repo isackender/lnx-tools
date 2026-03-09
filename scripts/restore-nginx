@@ -11,22 +11,21 @@ Use:
   restore-nginx list
   restore-nginx latest
   restore-nginx YYYY-MM-DD
-  restore-nginx nginx-backup-YYYY-MM-DD
-  restore-nginx nginx-final-YYYY-MM-DD
+  restore-nginx nginx-backup-YYYY-MM-DD-HHMMSS
   restore-nginx /complete/path/to/backup
 
-Ejemplos:
+Examples:
   restore-nginx list
   restore-nginx latest
   restore-nginx 2026-01-23
-  restore-nginx nginx-backup-2026-01-23
-  restore-nginx /root/nginx-final-2026-01-23/etc/nginx
+  restore-nginx nginx-backup-2026-01-23-123456
+  restore-nginx /root/nginx-backup-2026-01-23-123456/etc/nginx
 EOF
   exit 1
 }
 
 list_backups() {
-  find "$BACKUP_BASE" -maxdepth 1 -type d \( -name 'nginx-*' -o -name 'nginx-final-*' \) | sort
+  find "$BACKUP_BASE" -maxdepth 1 -type d -name 'nginx-backup-*' | sort
 }
 
 resolve_backup_dir() {
@@ -38,22 +37,17 @@ resolve_backup_dir() {
   fi
 
   if [[ "$input" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
-    if [ -d "${BACKUP_BASE}/nginx-final-${input}/etc/nginx" ]; then
-      echo "${BACKUP_BASE}/nginx-final-${input}/etc/nginx"
+    local latest_for_day
+    latest_for_day="$(find "$BACKUP_BASE" -maxdepth 1 -type d -name "nginx-backup-${input}-*" | sort | tail -n1 || true)"
+    if [ -n "$latest_for_day" ]; then
+      echo "$latest_for_day/etc/nginx"
       return 0
-    elif [ -d "${BACKUP_BASE}/nginx-backup-${input}" ]; then
-      echo "${BACKUP_BASE}/nginx-backup-${input}"
-      return 0
-    else
-      return 1
     fi
+    return 1
   fi
 
   if [ -d "${BACKUP_BASE}/${input}/etc/nginx" ]; then
     echo "${BACKUP_BASE}/${input}/etc/nginx"
-    return 0
-  elif [ -d "${BACKUP_BASE}/${input}" ]; then
-    echo "${BACKUP_BASE}/${input}"
     return 0
   fi
 
@@ -64,7 +58,7 @@ validate_backup_dir() {
   local dir="$1"
 
   if [ ! -d "$dir" ]; then
-    echo "Backup does not exist: $dir"
+    echo "No existe el backup: $dir"
     exit 1
   fi
 
@@ -83,7 +77,7 @@ restore_backup() {
   now="$(date +%F-%H%M%S)"
   local safety="${BACKUP_BASE}/nginx-restore-safety-${now}"
 
-  echo "Creating safety backup of current state on: $safety"
+  echo "Creating safety backup of current state in: $safety"
   mkdir -p "$safety"
   cp -a "$TARGET_DIR" "$safety/"
 
@@ -105,22 +99,12 @@ restore_backup() {
   echo "Reloading nginx..."
   systemctl reload nginx
 
-  echo "Nginx restoration completed successfully."
+  echo "Restoration completed successfully."
 }
 
 latest_backup() {
   local latest
-  latest="$(find "$BACKUP_BASE" -maxdepth 3 -type f -path '*/etc/nginx/nginx.conf' -printf '%T@ %h\n' 2>/dev/null \
-    | sort -nr \
-    | head -n1 \
-    | cut -d' ' -f2- || true)"
-
-  if [ -n "$latest" ]; then
-    echo "$latest"
-    return 0
-  fi
-
-  latest="$(find "$BACKUP_BASE" -maxdepth 2 -type f -name 'nginx.conf' -printf '%T@ %h\n' 2>/dev/null \
+  latest="$(find "$BACKUP_BASE" -maxdepth 2 -type f -path '*/etc/nginx/nginx.conf' -printf '%T@ %h\n' 2>/dev/null \
     | sort -nr \
     | head -n1 \
     | cut -d' ' -f2- || true)"
@@ -140,7 +124,7 @@ case "${CMD:-}" in
   latest)
     dir="$(latest_backup || true)"
     if [ -z "${dir:-}" ]; then
-      echo "No valid backup found."
+      echo "Could not find any valid backup."
       exit 1
     fi
     restore_backup "$dir"
@@ -151,7 +135,7 @@ case "${CMD:-}" in
   *)
     dir="$(resolve_backup_dir "$CMD" || true)"
     if [ -z "${dir:-}" ]; then
-      echo "Backup could not be resolved for: $CMD"
+      echo "Could not resolve backup for: $CMD"
       exit 1
     fi
 
