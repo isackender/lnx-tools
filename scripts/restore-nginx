@@ -99,7 +99,7 @@ restore_backup() {
   echo "Reloading nginx..."
   systemctl reload nginx
 
-  echo "Restoration completed successfully."
+  echo "Nginx restoration completed successfully."
 }
 
 latest_backup() {
