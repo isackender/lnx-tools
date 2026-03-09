@@ -2,7 +2,7 @@
 
 set -e
 
-ALIASES_FILE="~/.bash_aliases"
+ALIASES_FILE="$HOME/.bash_aliases"
 
 echo "Installing Neo aliases..."
 
