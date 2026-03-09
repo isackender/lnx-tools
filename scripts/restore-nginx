@@ -58,7 +58,7 @@ validate_backup_dir() {
   local dir="$1"
 
   if [ ! -d "$dir" ]; then
-    echo "No existe el backup: $dir"
+    echo "Backup does not exist: $dir"
     exit 1
   fi
 
