@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SOURCE_DIR="/etc/nginx"
+BACKUP_BASE="/root"
+KEEP_COUNT=3
+
+DATE_STR="$(date +%F)"
+TIME_STR="$(date +%H%M%S)"
+BACKUP_DIR="${BACKUP_BASE}/nginx-backup-${DATE_STR}-${TIME_STR}"
+
+if [ ! -d "$SOURCE_DIR" ]; then
+  echo "Source directory does not exist: $SOURCE_DIR"
+  exit 1
+fi
+
+if [ ! -d "$BACKUP_BASE" ]; then
+  echo "Backup base directory does not exist: $BACKUP_BASE"
+  exit 1
+fi
+
+echo "Validating nginx configuration..."
+nginx -t
+
+echo "Creating backup in: $BACKUP_DIR"
+mkdir -p "$BACKUP_DIR"
+cp -a "$SOURCE_DIR" "$BACKUP_DIR/"
+
+echo "Removing old backups, leaving only last ${KEEP_COUNT}..."
+mapfile -t BACKUPS < <(find "$BACKUP_BASE" -maxdepth 1 -mindepth 1 -type d -name 'nginx-backup-*' | sort)
+
+BACKUP_TOTAL="${#BACKUPS[@]}"
+
+if [ "$BACKUP_TOTAL" -gt "$KEEP_COUNT" ]; then
+  DELETE_COUNT=$((BACKUP_TOTAL - KEEP_COUNT))
+  for ((i=0; i<DELETE_COUNT; i++)); do
+    echo "Removing old backup: ${BACKUPS[$i]}"
+    rm -rf "${BACKUPS[$i]}"
+  done
+fi
+
+echo "Nginx backup completed successfully."
