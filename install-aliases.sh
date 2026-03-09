@@ -14,7 +14,7 @@ fi
 touch "$ALIASES_FILE"
 
 # Removes previous block if exists
-sed -i '/# >>> Neo bootstrap aliases >>>/,/# <<< Neo bootstrap aliases <<</d' "$ALIASES_FILE"
+sed -i '/# >>> LNX Tools aliases >>>/,/# <<< LNX Tools aliases <<</d' "$ALIASES_FILE"
 
 # Adds new block
 printf '\n' >> "$ALIASES_FILE"
@@ -22,6 +22,6 @@ cat "$SOURCE_ALIASES_FILE" >> "$ALIASES_FILE"
 
 chown "$TARGET_USER":"$TARGET_USER" "$ALIASES_FILE"
 
-printf "\n--\nAliases installed for %s, Neo.\n" "$TARGET_USER"
+printf "\n--\nAliases installed for %s\n" "$TARGET_USER"
 printf "To load them in the current session, run:\n"
 printf "  source ~/.bash_aliases\n"
