@@ -1,4 +1,4 @@
-# Neo Bootstrap
+# LNX Tools
 
 Mini bootstrap to quickly configure a Linux server with my basic tools.
 
@@ -55,8 +55,8 @@ Installed aliases:
 
 ```bash
 alias edalias='nano ~/.bash_aliases && sourcealias'
-alias sourcealias="source ~/.bash_aliases && printf '\n--\nAliases updated, Neo.\n'"
-alias updateos="apt update && apt upgrade -y && printf '\n--\nSystem updated, Neo.\n'"
+alias sourcealias="source ~/.bash_aliases && printf '\n--\nAliases updated.\n'"
+alias updateos="apt update && apt upgrade -y && printf '\n--\nSystem updated.\n'"
 ```
 
 ---
