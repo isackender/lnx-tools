@@ -36,4 +36,4 @@ fi
 echo "Executing bootstrap..."
 bash "$TARGET_DIR/bootstrap.sh"
 
-printf "\n--\nInstall completed successfully.\n"
+printf "\n--\nInstall completed successfully, Neo.\n"
