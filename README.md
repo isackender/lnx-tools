@@ -31,7 +31,7 @@ The installer:
 
 ---
 
-# What gets installed
+# What does it install
 
 ## Basic tools
 
